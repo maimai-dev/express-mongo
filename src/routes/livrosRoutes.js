@@ -8,6 +8,6 @@ routes.get('/', LivroController.mensagemInicial);
 routes.post('/livros', LivroController.cadastrarLivro);
 routes.get('/livros/:id', LivroController.buscarLivro);
 routes.put('/livros/:id', LivroController.alterarLivro);
-routes.delete('/livros/:id', LivroController.deletarLivro)
+routes.delete('/livros/:id', LivroController.deletarLivro);
 
 export default routes;

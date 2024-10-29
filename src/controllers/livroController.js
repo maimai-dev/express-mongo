@@ -12,7 +12,11 @@ class LivroController {
     }
 
     static async cadastrarLivro(req, res){
-        livros.push(req.body);
+        try{
+            //logica
+        }catch(erro){
+            //erro
+        }
         res.status(201).send('Livro cadastrado com sucesso');
     }
 
