@@ -1,6 +1,6 @@
 import express from 'express';
 import conectaNaDataBase from './config/dbConnect.js';
-import livro from './models/Livro.js';
+import routes from './routes/index.js';
 
 const conexao = await conectaNaDataBase();
 
@@ -13,17 +13,8 @@ conexao.once('open', () =>{
 })
 
 const app = express();
-app.use(express.json());
+routes(app);
 
-// app.get('/', (req, res) =>{
-//     res.status(200).send('Curso de Node.js');
-// });
-
-
-// app.post('/livros', (req, res) =>{
-//     livros.push(req.body);
-//     res.status(201).send('Livro cadastrado com sucesso');
-// });
 
 // app.get('/livros/:id', (req, res) =>{
 //     const index = buscaLivro(req.params.id);
