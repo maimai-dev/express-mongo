@@ -24,26 +24,26 @@ class LivroController {
         try{
             const id = req.params.id;
             const livroEncontrado = await livro.findById(id);
-            res.status(200).json({livro: livroEncontrado});
+            res.status(200).json(livroEncontrado);
         }catch(erro){
-            res.status(500).json({message: `${erro.message} - falha ao buscar livro`})
+            res.status(500).json({message: `${erro.message} - falha na requisição do livro`})
         }
     }
 
-    static async alterarLivro(req, res){
+    static async atualizarLivro(req, res){
         try{
             const id = req.params.id;
-            const livroASerAlterado = await livro.findByIdAndUpdate(id, {titulo: "Não e o senhor dos anéis"});
-            res.status(200).json({livroAlterado: livroASerAlterado});
+            await livro.findByIdAndUpdate(id, req.body);
+            res.status(200).json({message: "livro atualizado"});
         }catch(erro){
-            res.status(500).json({message: `${erro.message} - falha a alterar o livro`})
+            res.status(500).json({message: `${erro.message} - falha na atualização do livro`})
         }
     }
 
     static async deletarLivro(req, res){
         try{
             const id = req.params.id;
-            const livroASerDeletado = await livro.findByIdAndRemove(id);
+            await livro.findByIdAndRemove(id);
             const livrosRestantes = await livro.find({});
             res.status(200).json({livrosNaoApagados: livrosRestantes});
         } catch (erro){
