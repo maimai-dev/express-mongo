@@ -3,8 +3,12 @@ import livro from "../models/Livro.js";
 class LivroController {
 
     static async listarLivros (req, res){
-        const listaLivros = await livro.find({});
-        res.status(200).json(listaLivros);
+        try{
+            const listaLivros = await livro.find({});
+            res.status(200).json(listaLivros);
+        }catch(erro){
+            res.status(500).json({message: `${erro.message} - falha na requisição`})
+        }
     }
 
     static async cadastrarLivro(req, res){
@@ -16,23 +20,36 @@ class LivroController {
         }
     }
 
-    static async buscarLivro(req, res){
-        const index = await livro.find(req.params.id);
-        res.status(200).json(index);
+    static async listarLivroPorId (req, res){
+        try{
+            const id = req.params.id;
+            const livroEncontrado = await livro.findById(id);
+            res.status(200).json({livro: livroEncontrado});
+        }catch(erro){
+            res.status(500).json({message: `${erro.message} - falha ao buscar livro`})
+        }
     }
 
     static async alterarLivro(req, res){
-        const index = await buscaLivro(req.params.id);
-        livros[index].titulo = req.body.titulo;
-        res.status(200).json(livro);
+        try{
+            const id = req.params.id;
+            const livroASerAlterado = await livro.findByIdAndUpdate(id, {titulo: "Não e o senhor dos anéis"});
+            res.status(200).json({livroAlterado: livroASerAlterado});
+        }catch(erro){
+            res.status(500).json({message: `${erro.message} - falha a alterar o livro`})
+        }
     }
 
     static async deletarLivro(req, res){
-        const index = await buscaLivro(req.params.id);
-        livros.splice(index, 1);
-        res.status(200).send('livro removido com sucesso');
+        try{
+            const id = req.params.id;
+            const livroASerDeletado = await livro.findByIdAndRemove(id);
+            const livrosRestantes = await livro.find({});
+            res.status(200).json({livrosNaoApagados: livrosRestantes});
+        } catch (erro){
+            res.status(500).json({message: `${erro.message} - livro não deletado`})
+        }
     }
-
 };
 
 export default LivroController;
