@@ -1,4 +1,5 @@
 import livro from "../models/Livro.js";
+import { autores } from "../models/Autor.js";
 
 class LivroController {
 
@@ -12,8 +13,11 @@ class LivroController {
     }
 
     static async cadastrarLivro(req, res){
+        const novoLivro = req.body;
         try{
-            const novoLivro = await livro.create(req.body);
+            const autorEncontrado = await autores.findById(novoLivro.autor);
+            const livroCompleto = {...novoLivro, autor: {...autorEncontrado._doc}};
+            const livroCriado = await livro.create(livroCompleto);
             res.status(201).json({message: 'criado com sucesso', livro: novoLivro});
         }catch(erro){
             res.status(500).json({message: `${erro.message} - falha ao cadastrar livro`});
@@ -40,14 +44,13 @@ class LivroController {
         }
     }
 
-    static async deletarLivro(req, res){
+    static async excluirLivro(req, res){
         try{
             const id = req.params.id;
-            await livro.findByIdAndRemove(id);
-            const livrosRestantes = await livro.find({});
-            res.status(200).json({livrosNaoApagados: livrosRestantes});
+            await livro.findByIdAndDelete(id);
+            res.status(200).json({message: "livro excluido com sucesso"});
         } catch (erro){
-            res.status(500).json({message: `${erro.message} - livro não deletado`})
+            res.status(500).json({message: `${erro.message} - falha na exclusão`})
         }
     }
 };
