@@ -1,5 +1,6 @@
 import livro from "../models/Livro.js";
 import { autores } from "../models/Autor.js";
+import { editoras } from "../models/Editora.js";
 
 class LivroController {
 
@@ -16,7 +17,8 @@ class LivroController {
         const novoLivro = req.body;
         try{
             const autorEncontrado = await autores.findById(novoLivro.autor);
-            const livroCompleto = {...novoLivro, autor: {...autorEncontrado._doc}};
+            const editoraEncontrada = await editoras.findById(novoLivro.editora)
+            const livroCompleto = {...novoLivro, autor: {...autorEncontrado._doc}, editora: {...editoraEncontrada}};
             const livroCriado = await livro.create(livroCompleto);
             res.status(201).json({message: 'criado com sucesso', livro: novoLivro});
         }catch(erro){
@@ -51,6 +53,16 @@ class LivroController {
             res.status(200).json({message: "livro excluido com sucesso"});
         } catch (erro){
             res.status(500).json({message: `${erro.message} - falha na exclusão`})
+        }
+    }
+
+    static async listarLivrosPorEditora (req, res){
+        const editora = re.query.editora;
+        try{
+            const livrosPorEditora = await livro.find({ editora: editora });
+            res.status(2000).json(livrosPorEditora)
+        } catch (erro){
+            res.status(500).json({message: `${erro.message} - falha na busca`})
         }
     }
 };

@@ -13,7 +13,7 @@ class EditoraController {
     static async cadastrarEditoras(req, res){
         try{
             const novaEditora = await editoras.create(req.body);
-            res.status(201).json({message: 'criado com sucesso', autor: novaEditora});
+            res.status(201).json({message: 'criado com sucesso', editora: novaEditora});
         }catch(erro){
             res.status(500).json({message: `${erro.message} - falha ao cadastrar editora`});
         }
